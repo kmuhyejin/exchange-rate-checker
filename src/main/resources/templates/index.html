@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>환율 조회 서비스</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+
+    <!-- 헤더 -->
+    <header class="header">
+        <h1>💱 환율 조회 서비스</h1>
+        <p class="subtitle">실시간 환율 정보 및 통화 변환</p>
+    </header>
+
+    <!-- 환율 조회 섹션 -->
+    <section class="card">
+        <h2>📊 환율 조회</h2>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="baseCurrency">기준 통화</label>
+                <select id="baseCurrency">
+                    <option th:each="currency : ${currencies}"
+                            th:value="${currency}"
+                            th:text="${currency}"
+                            th:selected="${currency == 'USD'}">
+                    </option>
+                </select>
+            </div>
+            <button class="btn btn-primary" onclick="fetchRates()">조회</button>
+        </div>
+
+        <div id="ratesResult" class="hidden">
+            <div class="update-info">
+                <span id="lastUpdated"></span>
+                <span id="nextUpdate"></span>
+            </div>
+            <div class="rates-grid" id="ratesGrid"></div>
+        </div>
+    </section>
+
+    <!-- 통화 변환 섹션 -->
+    <section class="card">
+        <h2>🔄 통화 변환</h2>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="fromCurrency">변환 전 통화</label>
+                <select id="fromCurrency">
+                    <option th:each="currency : ${currencies}"
+                            th:value="${currency}"
+                            th:text="${currency}"
+                            th:selected="${currency == 'USD'}">
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="amount">금액</label>
+                <input type="number" id="amount" placeholder="금액 입력" value="100" min="0" step="any">
+            </div>
+            <div class="form-group">
+                <label for="toCurrency">변환 후 통화</label>
+                <select id="toCurrency">
+                    <option th:each="currency : ${currencies}"
+                            th:value="${currency}"
+                            th:text="${currency}"
+                            th:selected="${currency == 'KRW'}">
+                    </option>
+                </select>
+            </div>
+            <button class="btn btn-success" onclick="convertCurrency()">변환</button>
+        </div>
+
+        <div id="convertResult" class="hidden">
+            <div class="convert-result-box">
+                <span id="convertOutput"></span>
+                <small id="convertRate"></small>
+            </div>
+        </div>
+    </section>
+
+    <!-- 조회 이력 섹션 -->
+    <section class="card">
+        <div class="card-header-row">
+            <h2>🕒 최근 조회 이력</h2>
+            <button class="btn btn-outline" onclick="fetchHistory()">새로고침</button>
+        </div>
+        <div id="historyResult">
+            <p class="empty-msg">통화 변환을 하면 이력이 기록됩니다.</p>
+        </div>
+    </section>
+
+</div>
+
+<!-- 로딩 스피너 -->
+<div id="spinner" class="spinner-overlay hidden">
+    <div class="spinner"></div>
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>
